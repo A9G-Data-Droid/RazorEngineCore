@@ -10,7 +10,7 @@ namespace RazorEngineCore
     {
         public RazorEngineCompilationOptions Options { get; set; }
 
-        public RazorEngineCompilationOptionsBuilder(RazorEngineCompilationOptions options = null)
+        public RazorEngineCompilationOptionsBuilder(RazorEngineCompilationOptions? options = null)
         {
             this.Options = options ?? new RazorEngineCompilationOptions();
         }
@@ -23,7 +23,7 @@ namespace RazorEngineCore
 
         public void AddAssemblyReference(Assembly assembly)
         {
-            this.Options.ReferencedAssemblies.Add(assembly);
+            this.Options.ReferencedAssemblies?.Add(assembly);
         }
 
         public void AddAssemblyReference(Type type)
@@ -46,7 +46,7 @@ namespace RazorEngineCore
             this.Options.DefaultUsings.Add(namespaceName);
         }
 
-        public void Inherits(Type type)
+        public void InheritFrom(Type type)
         {
             this.Options.Inherits = this.RenderTypeName(type);
             this.AddAssemblyReference(type);
@@ -54,10 +54,10 @@ namespace RazorEngineCore
 
         private string RenderTypeName(Type type)
         {
-            IList<string> elements = new List<string>()
+            IList<string?> elements = new List<string?>()
             {
                 type.Namespace,
-                RenderDeclaringType(type.DeclaringType),
+                RazorEngineCompilationOptionsBuilder.RenderDeclaringType(type.DeclaringType),
                 type.Name
             };
 
@@ -77,14 +77,14 @@ namespace RazorEngineCore
             return result + "<" + string.Join(",", type.GenericTypeArguments.Select(this.RenderTypeName)) + ">";
         }
 
-        private string RenderDeclaringType(Type type)
+        private static string? RenderDeclaringType(Type? type)
         {
             if (type == null)
             {
                 return null;
             }
 
-            string parent = RenderDeclaringType(type.DeclaringType);
+            string? parent = RazorEngineCompilationOptionsBuilder.RenderDeclaringType(type.DeclaringType);
 
             if (string.IsNullOrWhiteSpace(parent))
             {

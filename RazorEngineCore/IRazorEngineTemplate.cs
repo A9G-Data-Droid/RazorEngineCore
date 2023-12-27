@@ -6,9 +6,9 @@ namespace RazorEngineCore
     {
 
         dynamic Model { get; set; }
-        void WriteLiteral(string literal = null);
+        void WriteLiteral(string? literal = null);
         
-        void Write(object obj = null);
+        void Write(object? obj = null);
         
         void BeginWriteAttribute(string name, string prefix, int prefixOffset, string suffix, int suffixOffset, int attributeValuesCount);
         

@@ -8,15 +8,15 @@ namespace RazorEngineCore
 {
     public class RazorEngineCompilationOptions
     {
-        public HashSet<Assembly> ReferencedAssemblies { get; set; }
+        public HashSet<Assembly>? ReferencedAssemblies { get; set; }
 
-        public HashSet<MetadataReference> MetadataReferences { get; set; } = new HashSet<MetadataReference>();
+        public HashSet<MetadataReference> MetadataReferences { get; set; } = new();
         public string TemplateNamespace { get; set; } = "TemplateNamespace";
         public string TemplateFilename { get; set; } = "";
         public string Inherits { get; set; } = "RazorEngineCore.RazorEngineTemplateBase";
         ///Set to true to generate PDB symbols information along with the assembly for debugging support
-        public bool IncludeDebuggingInfo { get; set; } = false;
-        public HashSet<string> DefaultUsings { get; set; } = new HashSet<string>()
+        public bool IncludeDebuggingInfo { get; set; }
+        public HashSet<string> DefaultUsings { get; set; } = new()
         {
             "System.Linq",
             "System.Collections",
@@ -30,14 +30,14 @@ namespace RazorEngineCore
 
             if (isWindows && isFullFramework)
             {
-                this.ReferencedAssemblies = new HashSet<Assembly>()
+                ReferencedAssemblies = new HashSet<Assembly>()
                 {
                     typeof(object).Assembly,
                     Assembly.Load(new AssemblyName("Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")),
                     typeof(RazorEngineTemplateBase).Assembly,
                     typeof(System.Runtime.GCSettings).Assembly,
                     typeof(System.Collections.IList).Assembly,
-                    typeof(System.Collections.Generic.IEnumerable<>).Assembly,
+                    typeof(IEnumerable<>).Assembly,
                     typeof(System.Linq.Enumerable).Assembly,
                     typeof(System.Linq.Expressions.Expression).Assembly,
                     Assembly.Load(new AssemblyName("netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51"))
@@ -46,14 +46,14 @@ namespace RazorEngineCore
 
             if (isWindows && !isFullFramework) // i.e. NETCore
             {
-                this.ReferencedAssemblies = new HashSet<Assembly>()
+                ReferencedAssemblies = new HashSet<Assembly>()
                 {
                     typeof(object).Assembly,
                     Assembly.Load(new AssemblyName("Microsoft.CSharp")),
                     typeof(RazorEngineTemplateBase).Assembly,
                     Assembly.Load(new AssemblyName("System.Runtime")),
                     typeof(System.Collections.IList).Assembly,
-                    typeof(System.Collections.Generic.IEnumerable<>).Assembly,
+                    typeof(IEnumerable<>).Assembly,
                     Assembly.Load(new AssemblyName("System.Linq")),
                     Assembly.Load(new AssemblyName("System.Linq.Expressions")),
                     Assembly.Load(new AssemblyName("netstandard"))
@@ -62,14 +62,14 @@ namespace RazorEngineCore
 
             if (!isWindows)
             {
-                this.ReferencedAssemblies = new HashSet<Assembly>()
+                ReferencedAssemblies = new HashSet<Assembly>()
                 {
                     typeof(object).Assembly,
                     Assembly.Load(new AssemblyName("Microsoft.CSharp")),
                     typeof(RazorEngineTemplateBase).Assembly,
                     Assembly.Load(new AssemblyName("System.Runtime")),
                     typeof(System.Collections.IList).Assembly,
-                    typeof(System.Collections.Generic.IEnumerable<>).Assembly,
+                    typeof(IEnumerable<>).Assembly,
                     Assembly.Load(new AssemblyName("System.Linq")),
                     Assembly.Load(new AssemblyName("System.Linq.Expressions")),
                     Assembly.Load(new AssemblyName("netstandard"))

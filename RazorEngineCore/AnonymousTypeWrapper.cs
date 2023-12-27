@@ -8,16 +8,16 @@ namespace RazorEngineCore
 {
     public class AnonymousTypeWrapper : DynamicObject
     {
-        private readonly object model;
+        private readonly object _model;
 
         public AnonymousTypeWrapper(object model)
         {
-            this.model = model;
+            this._model = model;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        public override bool TryGetMember(GetMemberBinder binder, out object? result)
         {
-            PropertyInfo propertyInfo = this.model.GetType().GetProperty(binder.Name);
+            PropertyInfo? propertyInfo = this._model.GetType().GetProperty(binder.Name);
 
             if (propertyInfo == null)
             {
@@ -25,7 +25,7 @@ namespace RazorEngineCore
                 return false;
             }
 
-            result = propertyInfo.GetValue(this.model, null);
+            result = propertyInfo.GetValue(this._model, null);
 
             if (result == null)
             {
@@ -45,9 +45,9 @@ namespace RazorEngineCore
 
                 foreach(object key in keys)
                 {
-                    if (dictionary[key].IsAnonymous())
+                    if (dictionary[key]?.IsAnonymous() ?? false)
                     {
-                        dictionary[key] = new AnonymousTypeWrapper(dictionary[key]);
+                        dictionary[key] = new AnonymousTypeWrapper(dictionary[key]!);
                     }
                 }
             }

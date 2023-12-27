@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RazorEngineCore.Tests.Models
+﻿namespace RazorEngineCore.Tests.Models
 {
     public class NestedTestModel
     {

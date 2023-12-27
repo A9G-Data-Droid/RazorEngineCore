@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAppCore", "ExampleAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAppNET472", "ExampleAppNet472\ExampleAppNET472.csproj", "{D27C1578-BFF9-4469-9099-DAF64450BBBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAppNET5", "ExampleAppNET5\ExampleAppNET5.csproj", "{B19C090A-4EC1-441D-B702-ADD2ECA79198}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAppNET6", "ExampleAppNET5\ExampleAppNET6.csproj", "{B19C090A-4EC1-441D-B702-ADD2ECA79198}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

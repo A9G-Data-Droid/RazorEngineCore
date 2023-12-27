@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RazorEngineCore.Tests
@@ -15,8 +13,10 @@ namespace RazorEngineCore.Tests
             var errorThrown = false;
             try
             {
-                IRazorEngineCompiledTemplate initialTemplate = razorEngine.Compile("@{ this is a syntaxerror }", 
-                    builder => { builder.Options.TemplateFilename = "templatefilenameset.txt"; });
+                _ = razorEngine.Compile("@{ this is a syntaxerror }", builder =>
+                {
+                    builder.Options.TemplateFilename = "templatefilenameset.txt";
+                });
             }
             catch (Exception e)
             {

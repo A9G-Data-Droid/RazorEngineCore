@@ -15,11 +15,11 @@ namespace RazorEngineCore
 {
     public class RazorEngine : IRazorEngine
     {
-        public IRazorEngineCompiledTemplate<T> Compile<T>(string content, Action<IRazorEngineCompilationOptionsBuilder> builderAction = null, CancellationToken cancellationToken = default) where T : IRazorEngineTemplate
+        public IRazorEngineCompiledTemplate<T> Compile<T>(string content, Action<IRazorEngineCompilationOptionsBuilder>? builderAction = null, CancellationToken cancellationToken = default) where T : IRazorEngineTemplate
         {
-            IRazorEngineCompilationOptionsBuilder compilationOptionsBuilder = new RazorEngineCompilationOptionsBuilder();
+            RazorEngineCompilationOptionsBuilder compilationOptionsBuilder = new();
             compilationOptionsBuilder.AddAssemblyReference(typeof(T).Assembly);
-            compilationOptionsBuilder.Inherits(typeof(T));
+            compilationOptionsBuilder.InheritFrom(typeof(T));
 
             builderAction?.Invoke(compilationOptionsBuilder);
 
@@ -28,15 +28,16 @@ namespace RazorEngineCore
             return new RazorEngineCompiledTemplate<T>(meta);
         }
 
-        public Task<IRazorEngineCompiledTemplate<T>> CompileAsync<T>(string content, Action<IRazorEngineCompilationOptionsBuilder> builderAction = null, CancellationToken cancellationToken = default) where T : IRazorEngineTemplate
+        public Task<IRazorEngineCompiledTemplate<T>> CompileAsync<T>(string content, Action<IRazorEngineCompilationOptionsBuilder>? builderAction = null, CancellationToken cancellationToken = default) where T : IRazorEngineTemplate
         {
-            return Task.Run(() => this.Compile<T>(content: content, builderAction: builderAction, cancellationToken: cancellationToken));
+            return Task.Run(() => 
+                this.Compile<T>(content: content, builderAction: builderAction, cancellationToken: cancellationToken), CancellationToken.None);
         }
 
-        public IRazorEngineCompiledTemplate Compile(string content, Action<IRazorEngineCompilationOptionsBuilder> builderAction = null, CancellationToken cancellationToken = default)
+        public IRazorEngineCompiledTemplate Compile(string content, Action<IRazorEngineCompilationOptionsBuilder>? builderAction = null, CancellationToken cancellationToken = default)
         {
-            IRazorEngineCompilationOptionsBuilder compilationOptionsBuilder = new RazorEngineCompilationOptionsBuilder();
-            compilationOptionsBuilder.Inherits(typeof(RazorEngineTemplateBase));
+            RazorEngineCompilationOptionsBuilder compilationOptionsBuilder = new();
+            compilationOptionsBuilder.InheritFrom(typeof(RazorEngineTemplateBase));
 
             builderAction?.Invoke(compilationOptionsBuilder);
  
@@ -44,19 +45,16 @@ namespace RazorEngineCore
             return new RazorEngineCompiledTemplate(meta);
         }
 
-        public Task<IRazorEngineCompiledTemplate> CompileAsync(string content, Action<IRazorEngineCompilationOptionsBuilder> builderAction = null, CancellationToken cancellationToken = default)
+        public Task<IRazorEngineCompiledTemplate> CompileAsync(string content, Action<IRazorEngineCompilationOptionsBuilder>? builderAction = null, CancellationToken cancellationToken = default)
         {
-            return Task.Run(() => this.Compile(
-                content, 
-                builderAction, 
-                cancellationToken));
+            return Task.Run(() => this.Compile(content, builderAction, cancellationToken), CancellationToken.None);
         }
 
         protected virtual RazorEngineCompiledTemplateMeta CreateAndCompileToStream(string templateSource, RazorEngineCompilationOptions options, CancellationToken cancellationToken)
         {
             templateSource = this.WriteDirectives(templateSource, options);
 
-            string projectPath = @".";
+            string projectPath = ".";
             string fileName = string.IsNullOrWhiteSpace(options.TemplateFilename) 
                 ? Path.GetRandomFileName() + ".cshtml" 
                 : options.TemplateFilename;
@@ -111,7 +109,7 @@ namespace RazorEngineCore
 
 
             MemoryStream assemblyStream = new MemoryStream();
-            MemoryStream pdbStream = options.IncludeDebuggingInfo ? new MemoryStream() : null;
+            MemoryStream? pdbStream = options.IncludeDebuggingInfo ? new MemoryStream() : null;
 
             EmitResult emitResult = compilation.Emit(assemblyStream, pdbStream, cancellationToken: cancellationToken);
 

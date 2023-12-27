@@ -48,19 +48,19 @@ namespace RazorEngineCore
             return new RazorEngineCompiledTemplate(await RazorEngineCompiledTemplateMeta.Read(stream));
         }
         
-        public string Run(object model = null)
+        public string Run(object? model = null)
         {
             return this.RunAsync(model).GetAwaiter().GetResult();
         }
 
-        public async Task<string> RunAsync(object model = null)
+        public async Task<string> RunAsync(object? model = null)
         {
             if (model != null && model.IsAnonymous())
             {
                 model = new AnonymousTypeWrapper(model);
             }
 
-            IRazorEngineTemplate instance = (IRazorEngineTemplate)Activator.CreateInstance(this.TemplateType);
+            IRazorEngineTemplate? instance = (IRazorEngineTemplate?)Activator.CreateInstance(this.TemplateType);
             instance.Model = model;
 
             if (this.IsDebuggerEnabled && instance is RazorEngineTemplateBase instance2)

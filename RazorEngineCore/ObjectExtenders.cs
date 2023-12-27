@@ -13,7 +13,7 @@ namespace RazorEngineCore
         public static ExpandoObject ToExpando(this object obj)
         {
             ExpandoObject expando = new ExpandoObject();
-            IDictionary<string, object> dictionary = expando;
+            IDictionary<string, object?> dictionary = expando;
 
             foreach (PropertyInfo property in obj.GetType().GetProperties())
             {
@@ -28,8 +28,9 @@ namespace RazorEngineCore
             Type type = obj.GetType();
 
             return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
-                   && type.IsGenericType && type.Name.Contains("AnonymousType")
-                      && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+                   && type.IsGenericType 
+                   && type.Name.Contains("AnonymousType")
+                   && (type.Name.StartsWith("<>", StringComparison.Ordinal) || type.Name.StartsWith("VB$", StringComparison.Ordinal))
                    && type.Attributes.HasFlag(TypeAttributes.NotPublic);
         }
 

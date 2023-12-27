@@ -6,23 +6,23 @@ namespace RazorEngineCore
 {
     public class RazorEngineCompiledTemplateMeta
     {
-        public byte[] AssemblyByteCode { get; set; }
-        public byte[] PdbByteCode { get; set; }
-        public string GeneratedSourceCode { get; set; }
-        public string TemplateNamespace { get; set; } = "TemplateNamespace";
-        public string TemplateSource { get; set; }
-        public string TemplateFileName { get; set; }
+        public byte[]? AssemblyByteCode { get; set; }
+        public byte[]? PdbByteCode { get; set; }
+        public string? GeneratedSourceCode { get; set; }
+        public string? TemplateNamespace { get; set; } = "TemplateNamespace";
+        public string? TemplateSource { get; set; }
+        public string? TemplateFileName { get; set; }
 
-        public async Task Write(Stream stream)
+        public async Task? Write(Stream stream)
         {
             await stream.WriteLong(10001);
 
-            await this.WriteBuffer(stream, this.AssemblyByteCode);
-            await this.WriteBuffer(stream, this.PdbByteCode);
-            await this.WriteString(stream, this.GeneratedSourceCode);
-            await this.WriteString(stream, this.TemplateSource);
-            await this.WriteString(stream, this.TemplateNamespace);
-            await this.WriteString(stream, this.TemplateFileName);
+            await RazorEngineCompiledTemplateMeta.WriteBuffer(stream, this.AssemblyByteCode);
+            await RazorEngineCompiledTemplateMeta.WriteBuffer(stream, this.PdbByteCode);
+            await RazorEngineCompiledTemplateMeta.WriteString(stream, this.GeneratedSourceCode);
+            await RazorEngineCompiledTemplateMeta.WriteString(stream, this.TemplateSource);
+            await RazorEngineCompiledTemplateMeta.WriteString(stream, this.TemplateNamespace);
+            await RazorEngineCompiledTemplateMeta.WriteString(stream, this.TemplateFileName);
         }
 
         public static async Task<RazorEngineCompiledTemplateMeta> Read(Stream stream)
@@ -50,15 +50,16 @@ namespace RazorEngineCore
             };
         }
 
-        private Task WriteString(Stream stream, string value)
+        private static Task WriteString(Stream stream, string? value)
         {
-            byte[] buffer = value == null ? null : Encoding.UTF8.GetBytes(value);
-            return this.WriteBuffer(stream, buffer);
+            byte[]? buffer = value == null ? null : Encoding.UTF8.GetBytes(value);
+
+            return RazorEngineCompiledTemplateMeta.WriteBuffer(stream, buffer);
         }
 
-        private async Task WriteBuffer(Stream stream, byte[] buffer)
+        private static async Task WriteBuffer(Stream stream, byte[]? buffer)
         {
-            if (buffer == null)
+            if (buffer is null)
             {
                 await stream.WriteLong(0);
                 return;
@@ -72,13 +73,13 @@ namespace RazorEngineCore
 #endif
         }
 
-        private static async Task<string> ReadString(Stream stream)
+        private static async Task<string?> ReadString(Stream stream)
         {
-            byte[] buffer = await ReadBuffer(stream);
-            return buffer == null ? null : Encoding.UTF8.GetString(buffer);
+            byte[]? buffer = await ReadBuffer(stream);
+            return buffer is null ? null : Encoding.UTF8.GetString(buffer);
         }
 
-        private static async Task<byte[]> ReadBuffer(Stream stream)
+        private static async Task<byte[]?> ReadBuffer(Stream stream)
         {
             long length = await stream.ReadLong();
 
